@@ -64,7 +64,7 @@ int server_connect(int from_client) {\
   Sets *to_client to the file descriptor to the downstream pipe.
   returns the file descriptor for the upstream pipe.
   =========================*/
-int server_handshake(int *to_client) {
+it server_handshake(int *to_client) {
   printf("Creating WKP\n");
   int check = mkfifo(WKP,0644);
   if(check == -1) {

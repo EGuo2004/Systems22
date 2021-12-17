@@ -118,32 +118,40 @@ int server_connect(int from_client) {
   returns the file descriptor for the downstream pipe.
   =========================*/
 int client_handshake(int *to_server) {
-  printf("Creating FIFO\n");
-  char *secret = calloc(HANDSHAKE_BUFFER_SIZE, sizeof(char));;
-  sprintf(secret, "%d", getpid());
-  mkfifo(secret, 0644);
 
-  printf("Opening WKP\n");
-  *to_server = open(WKP,O_WRONLY);
+  int from_server;
+  char buffer[HANDSHAKE_BUFFER_SIZE];
+  char ppname[HANDSHAKE_BUFFER_SIZE];
 
-  printf("Writing to Secret\n");
-  write(*to_server,secret,HANDSHAKE_BUFFER_SIZE);
+  //make private pipe
+  printf("[client] handshake: making pp\n");
+  sprintf(ppname, "%d", getpid() );
+  mkfifo(ppname, 0600);
 
-  printf("Opening Secret\n");
-  int from_server = open(secret, O_RDONLY);
-
-  printf("Reading Secret\n");
-  char *ack = calloc(HANDSHAKE_BUFFER_SIZE, sizeof(char));
-  read(from_server, ack, HANDSHAKE_BUFFER_SIZE);
-
-  printf("Recieved Secret Name:%s\n", ack);
-
-  printf("Removing Secret\n");
-  remove(secret);
-
-  if (!strcmp(ack, ACK)) {
-      write(*to_server, "Complete", strlen("Complete"));
+  //send pp name to server
+  printf("[client] handshake: connecting to wkp\n");
+  *to_server = open( WKP, O_WRONLY, 0);
+  if ( *to_server == -1 ) {
+    printf("open error %d: %s\n", errno, strerror(errno));
+    exit(1);
   }
+
+  write(*to_server, ppname, sizeof(buffer));
+  //open and wait for connection
+  from_server = open(ppname, O_RDONLY, 0);
+
+  read(from_server, buffer, sizeof(buffer));
+  /*validate buffer code goes here */
+  printf("[client] handshake: received -%s-\n", buffer);
+
+  //remove pp
+  remove(ppname);
+  printf("[client] handshake: removed pp\n");
+
+  //send ACK to server
+  int r = atoi(buffer) + 1;
+  sprintf(buffer, "%d", r);
+  write(*to_server, buffer, sizeof(buffer));
 
   return from_server;
 }

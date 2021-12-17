@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <ctype.h>
+#include <time.h>
 
 #ifndef NETWORKING_H
 #define NETWORKING_H

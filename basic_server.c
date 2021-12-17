@@ -15,14 +15,18 @@ int main() {
 	  } else { 
 		  //child(subserver)
 		  to_client=server_connect(from_client);
+		  printf("connected\n");
 		  while(1) {
+		   printf("reading\n");
 		  if((read(from_client,line,sizeof(line))) == 0) {
 			  break;
 		  }
 		  int counter;
+		  printf("toupper\n");
 		  for(counter = 0; counter < strlen(line); counter++) {
 			  line[counter] = toupper(line[counter]);
 		  }
+		  printf("writing\n");
 		  write(to_client, line, sizeof(line));
   	      }
       }

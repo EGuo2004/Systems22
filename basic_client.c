@@ -12,11 +12,11 @@ int main(int argc, char *argv[]) {
   while(1) {
     printf("What do you want?\n");
     printf("getting info\n");
-    fgets(line, sizeof(line), stdin);
+    fgets(line, BUFFER_SIZE, stdin);
     printf("writing info\n");
-    write(to_server, line, sizeof(line));
+    write(to_server, line, BUFFER_SIZE);
     printf("reading info\n");
-		read(from_server,line,sizeof(line));
+		read(from_server,line,BUFFER_SIZE);
     printf("printing info\n");
 		printf("Here:%s\n", line);
 

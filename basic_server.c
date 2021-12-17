@@ -18,7 +18,7 @@ int main() {
 		  printf("connected\n");
 		  while(1) {
 		   printf("reading\n");
-		  if((read(from_client,line,sizeof(line))) == 0) {
+		  if((read(from_client,line,BUFFER_SIZE)) == 0) {
 			  break;
 		  }
 		  int counter;
@@ -27,7 +27,7 @@ int main() {
 			  line[counter] = toupper(line[counter]);
 		  }
 		  printf("writing\n");
-		  write(to_client, line, sizeof(line));
+		  write(to_client, line, BUFFER_SIZE);
   	      }
       }
    }

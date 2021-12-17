@@ -5,12 +5,13 @@ int main() {
 
   int to_client;
   int from_client;
-  char line[100];
+  char line[BUFFER_SIZE];
   while(1) {
 	  from_client = server_setup();
 	  int f = fork();
 	  if(f) {
 		  //parent(server)
+		  remove(WKP);
 	  } else { 
 		  //child(subserver)
 		  to_client=server_connect(from_client);

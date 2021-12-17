@@ -35,7 +35,7 @@ int server_setup() {
   returns the file descriptor for the downstream pipe.
   =========================*/
 int server_connect(int from_client) {
-    int to_client  = 0;
+    int to_client;
     int b;
     char buffer[HANDSHAKE_BUFFER_SIZE];
 
